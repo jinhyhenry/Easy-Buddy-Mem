@@ -7,7 +7,7 @@
 #define LH_BLK_TBL_SIZE 1024
 
 #include "ebd_list.h"
-#include "stddef.h"
+#include "ebd_sys_util.h"
 
 typedef struct _big_buf_t {
   void *ptr;

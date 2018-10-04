@@ -40,7 +40,7 @@ int ebd_block_init_divide(big_buf_t *bb)
 		}
 		num = total_size / dividing_size;
 		total_size = total_size % dividing_size;
-		ebd_block_process_current_div(tmp_ptr,num,dividing_size);
+		ebd_block_process_current_div(bb,tmp_ptr,num,i);
 	}
 	return 0;
 }

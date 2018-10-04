@@ -2,6 +2,7 @@
 #include "ebd_sys_util.h"
 #ifdef OS_LINUX
 #include "stdio.h"
+#include "stdlib.h"
 #include "stdarg.h"
 #endif
 
@@ -47,4 +48,10 @@ void ebd_debug(const char *cmd,...)
 #endif
 }  
 
+void *sys_malloc(size_t size)
+{
+#ifdef OS_LINUX
+	return malloc(size);
+#endif
+}
 

@@ -24,7 +24,7 @@ void *ebd_util_malloc_lh_blk_by_index(big_buf_t *bb,int index)
 		return NULL;
 	}
 	bb->lh_blk_tbl[index] = 0;
-	return *ptr_t+(index*sizeof(struct ebd_list_head));
+	return ptr_t+(index*sizeof(struct ebd_list_head));
 }
 
 void *ebd_util_mallc_lh_blk(big_buf_t *bb)
