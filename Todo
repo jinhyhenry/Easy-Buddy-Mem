@@ -1,0 +1,16 @@
+big_buffer --- 
+	ptr , size //org
+	block[11] -- lists of free blocks
+	pages[11] -- free bytes
+
+bd_init
+bd_malloc(big,)
+bd_free
+bd_relloc
+bd_deinit
+
+merge_bytes
+merge_pages
+
+debug_thread -- print every list state
+
