@@ -2,7 +2,6 @@
 #include "ebd_sys_util.h"
 #ifdef OS_LINUX
 #include "stdio.h"
-#include "stdlib.h"
 #include "stdarg.h"
 #endif
 
@@ -52,6 +51,13 @@ void *sys_malloc(size_t size)
 {
 #ifdef OS_LINUX
 	return malloc(size);
+#endif
+}
+
+void sys_free(void *ptr)
+{
+#ifdef OS_LINUX
+	free(ptr);
 #endif
 }
 
