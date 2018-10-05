@@ -4,6 +4,8 @@
 #define ONE_PAGE_SIZE 4096
 #define BLOCK_X(X) (X*ONE_PAGE_SIZE)
 #define ALIGN_TO_4K(size) (size - size%ONE_PAGE_SIZE)
+#define ALIGN_TO_4K_ADD(size) (size + (ONE_PAGE_SIZE-(size%ONE_PAGE_SIZE)))
+
 
 #include "ebd_block.h"
 #include "ebd_sys_util.h"

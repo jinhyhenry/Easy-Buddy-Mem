@@ -50,6 +50,11 @@ int ebd_block_init_divide(big_buf_t *bb)
 	return 0;
 }
 
+void *ebd_block_malloc(big_buf_t *bb,size_t size)
+{
+	
+}
+
 big_buf_t *ebd_block_register(void *buf,size_t size)
 {
 	int i;
