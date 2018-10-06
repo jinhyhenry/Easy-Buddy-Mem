@@ -100,6 +100,7 @@ int ebd_test_interface(int typ)
 			buf = sys_malloc(SIZE_BB);
 			ebd_debug("input buf %d , size %d",buf,SIZE_BB);
 			big_buf_t *bb = ebd_register_big_buf(buf,SIZE_BB);
+			ebd_malloc(bb,SIZE_BB/2);
 			sys_free(buf);
 			break;
 	}
@@ -111,8 +112,8 @@ int main()
 	//ebd_test_sys_util(1);  /*pass*/
 	//ebd_test_data_size(1);
 	//ebd_test_util(2); /*pass*/
-	//ebd_test_interface(1);
-	ebd_test_list(1);
+	ebd_test_interface(1);
+	//ebd_test_list(1);
 	return 0;
 }
 

@@ -22,5 +22,6 @@ void ebd_high(const char *cmd,...);
 void ebd_debug(const char *cmd,...);
 void *sys_malloc(size_t size);
 void sys_free(void *ptr);
+void *sys_memset(void *b, int c, size_t len);
 
 #endif

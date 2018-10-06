@@ -3,6 +3,7 @@
 #ifdef OS_LINUX
 #include "stdio.h"
 #include "stdarg.h"
+#include "string.h"
 #endif
 
 void ebd_low(const char *cmd,...)  
@@ -60,4 +61,12 @@ void sys_free(void *ptr)
 	free(ptr);
 #endif
 }
+
+void *sys_memset(void *b, int c, size_t len)
+{
+#ifdef OS_LINUX
+	return memset(b,c,len);
+#endif
+}
+
 

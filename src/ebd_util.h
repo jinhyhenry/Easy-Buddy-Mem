@@ -12,6 +12,8 @@
 
 uint64_t ebd_util_pow(int x,int y);
 void *ebd_util_mallc_lh_blk(big_buf_t *bb);
+uint64_t ebd_util_get_data_size(int stage);
+int ebd_util_check_merge_avail(void *ptr1,void *ptr2,size_t size);
 
 #endif
 
