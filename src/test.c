@@ -43,6 +43,20 @@ int ebd_test_data_size(int typ)
 	return 0;
 }
 
+int ebd_test_travel_list(struct ebd_list_head *head)
+{
+	struct ebd_list_head *tmp;
+	int *dat;
+	tmp = head;
+	ebd_low("%s E h:%d",__func__,head);
+	tmp = tmp->next;	
+	while(tmp != head){
+		ebd_debug("%s list data tmp:%d",__func__,tmp);
+		tmp = tmp->next;
+	}
+	return 0;
+}
+
 int ebd_test_list(int typ)
 {
 	int dat[3] = {2,4,6};
@@ -50,22 +64,29 @@ int ebd_test_list(int typ)
 	struct ebd_list_head head,entry1,entry2,entry3,*tmp_head;
 	switch(typ){
 		case 1:
+			ebd_low("E!");
 			EBD_INIT_LIST_HEAD(&head);
 			tmp_head = &head;
 			entry1.data = dat;
-			entry2.data = dat + 1;
-			entry3.data = dat + 2;
-			ebd_list_add_tail(&head,&entry1);
-			ebd_list_add_tail(&head,&entry3);
+			entry2.data = dat+1;
+			entry3.data = dat+2;
+			ebd_low("%s begin to add list! h:%d en1:%d en2:%d en3:%d",__func__,&head,&entry1,&entry2,&entry3);
+			//ebd_low("dat1 %d");
+			ebd_list_add_tail(&entry1,&head);
+			ebd_list_add_tail(&entry3,&head);
 			ebd_list_add(&entry2,&entry1);
 
-			/*Travel List*/
-			tmp_head++;
-			while(tmp_head != &head){
-				tmp_dat = (int *)(tmp_head->data);
-				ebd_debug("list data %d",*tmp_dat);
-				tmp_head++;
-			}
+			ebd_test_travel_list(&head);
+
+			ebd_low("%s del en2",__func__);
+			ebd_list_del(&entry2);
+			ebd_low("%s is_empty: %d",__func__,ebd_list_empty(&head));
+			ebd_test_travel_list(&head);
+			ebd_low("%s del en3",__func__);
+			ebd_list_del(&entry3);
+			ebd_low("%s is_empty: %d",__func__,ebd_list_empty(&head));
+			ebd_test_travel_list(&head);
+			
 			break;
 	}
 	return 0;

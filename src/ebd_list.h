@@ -43,6 +43,15 @@ static inline void ebd_list_del(struct ebd_list_head *entry)
 	//entry->prev = NULL;
 }
 
+/*1 -- empty; 0 -- not*/
+static inline int ebd_list_empty(struct ebd_list_head *head)
+{
+	if(head->next == head){
+		return 1;
+	}
+	else
+		return 0;
+}
 
 #endif
 
