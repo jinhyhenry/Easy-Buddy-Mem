@@ -60,7 +60,7 @@ void *ebd_util_mallc_lh_blk(big_buf_t *bb)
 	/*Get a availeble addr*/
 	for(i=0;i<LH_BLK_TBL_SIZE;i++){
 		if(bb->lh_blk_tbl[i]){
-			ebd_low("found lh_blk %d",i);
+			ebd_low("%s found lh_blk %d",__func__,i);
 			return ebd_util_malloc_lh_blk_by_index(bb,i);
 		}
 	}

@@ -14,6 +14,7 @@ big_buf_t *ebd_register_big_buf(void* buf,size_t size)
 
 void *ebd_malloc(big_buf_t *bb,size_t size)
 {
+	ebd_low("%s E",__func__);
 	if(!bb){
 		ebd_debug("Null big buf!");
 		return NULL;

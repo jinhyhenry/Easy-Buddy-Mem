@@ -30,6 +30,8 @@ void *ebd_block_get_buf_by_stage(big_buf_t *bb,int stage)
 	ebd_list_del(entry);
 	tmp = entry->data;
 	ebd_util_free_lh_blk(bb,(void*)entry);
+
+	ebd_low("%s get buf %d in stage %d",__func__,tmp,stage);
 	return tmp;
 }
 
@@ -37,10 +39,11 @@ int ebd_block_get_stage_lvl(size_t size)
 {
 	int i;
 	for(i=0;i<NUM_OF_BLOCK;i++){
-		if(size >= ebd_util_get_data_size(i)){
+		if(size <= ebd_util_get_data_size(i)){
 			break;
 		}
 	}
+	ebd_low("%s stage %d",__func__,i);
 	return i;
 }
 
@@ -52,14 +55,24 @@ void ebd_block_add_buf_to_list(big_buf_t *bb,void *ptr,int stage)
 	entry = (struct ebd_list_head *)ebd_util_mallc_lh_blk(bb);
 	entry->data = ptr;
 
+	ebd_low("%s E",__func__);
+
 	/*Travel*/
 	tmp = head->next;
+	if(ebd_list_empty(head)){
+		ebd_low("%s add to tail directly!",__func__);
+		ebd_list_add_tail(entry,head);
+		return;
+	}
+	ebd_low("%s start travel!",__func__);
 	while(tmp != head){
 		if(tmp->data > entry->data){
 			break;
 		}
+		tmp = tmp->next;
 	}
 	ebd_list_add_tail(entry,tmp);
+	ebd_low("%s end travel!",__func__);
 	
 	if(ebd_util_check_merge_avail(entry->data,entry->next->data,(size_t)ebd_util_get_data_size(stage)) && (stage < bb->num_of_block-1)){
 		p = entry->data;
@@ -88,10 +101,11 @@ int ebd_block_process_current_div(big_buf_t *bb,void **ptr,int num,int stage)
 {
 	int i;
 	uint64_t div_size = ebd_util_get_data_size(stage);
+	ebd_low("%s E %d",__func__,stage);
 	for(i=0;i<num;i++){
 		*ptr += div_size;
 		ebd_block_add_buf_to_list(bb,*ptr,stage);
-		ebd_low("stage %d add , *ptr %d",stage,*ptr);
+		ebd_low("%s stage %d add , *ptr %d",__func__,stage,*ptr);
 		if(!(*ptr)){
 			ebd_debug("Mem Leak! \n");
 			return -1;
@@ -135,7 +149,7 @@ int ebd_block_init_divide(big_buf_t *bb)
 	
 	total_size = bb->size;
 	tmp_ptr = bb->ptr;
-	ebd_low("tmp ptr %d",tmp_ptr);
+	ebd_low("%s tmp ptr %d",__func__,tmp_ptr);
 	/*divide mem*/
 	for(i = bb->num_of_block-1;i>=0;i--){
 		dividing_size = ebd_util_get_data_size(i);
@@ -143,9 +157,9 @@ int ebd_block_init_divide(big_buf_t *bb)
 			continue;
 		}
 		num = total_size / dividing_size;
-		ebd_low("i %d , num %d , total %d , div %d , tmp_ptr %d",i,num,total_size,dividing_size,tmp_ptr);
+		ebd_low("%s i %d , num %d , total %d , div %d , tmp_ptr %d",__func__,i,num,total_size,dividing_size,tmp_ptr);
 		total_size = total_size % dividing_size;
-		ebd_low("final total %d",total_size);
+		ebd_low("%s final total %d",__func__,total_size);
 		ebd_block_process_current_div(bb,&tmp_ptr,num,i);
 	}
 	return 0;
@@ -155,14 +169,22 @@ void *ebd_block_malloc(big_buf_t *bb,size_t size)
 {
 	int stage,i;
 	void *buf;
+	ebd_low("%s E",__func__);
+
+	/*(1) get block stage according to its' size*/
 	stage = ebd_block_get_stage_lvl(size);
+
+	/*(2) get a empty buffer in free list*/
 	for(i=stage;i<NUM_OF_BLOCK;i++){
 		if(!ebd_list_empty(&bb->block_free_list[i])){
 			buf = ebd_block_get_buf_by_stage(bb,i);
 			break;
 		}
 	}
+
+	/*(3) do postproc*/
 	ebd_block_malloc_postproc(bb,i,buf,size);
+	
 	return buf;
 }
 
@@ -189,7 +211,7 @@ big_buf_t *ebd_block_register(void *buf,size_t size)
 	for(i=0;i<LH_BLK_TBL_SIZE;i++){
 		bb->lh_blk_tbl[i] = 1;
 	}
-	ebd_low("real buffer %d, size %d",bb->ptr,bb->size);
+	ebd_low("%s real buffer %d, size %d",__func__,bb->ptr,bb->size);
 	ebd_block_init_divide(bb);
 	return bb;
 }

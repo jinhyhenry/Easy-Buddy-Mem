@@ -94,13 +94,13 @@ int ebd_test_list(int typ)
 
 int ebd_test_interface(int typ)
 {
-	void *buf = NULL;
+	void *buf = NULL,*buf_small;
 	switch(typ){
 		case 1:
 			buf = sys_malloc(SIZE_BB);
 			ebd_debug("input buf %d , size %d",buf,SIZE_BB);
 			big_buf_t *bb = ebd_register_big_buf(buf,SIZE_BB);
-			ebd_malloc(bb,SIZE_BB/2);
+			buf_small = ebd_malloc(bb,SIZE_BB/2);
 			sys_free(buf);
 			break;
 	}
